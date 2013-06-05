@@ -1,6 +1,9 @@
+/*
+ * the implementation of the Class Stack
+ */
+
 
 #include "stack.h"
-
 #include <iostream>
 
 Stack::Stack()

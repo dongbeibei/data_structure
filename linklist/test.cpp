@@ -1,6 +1,11 @@
-#include "linklist.h"
+/*
+ * This is a test for the Class LinkList.
+ */
 
+
+#include "linklist.h"
 #include <iostream>
+
 using std::cout;
 using std::endl;
 

@@ -1,3 +1,8 @@
+/*
+ * The implementation of the Class Queue
+ */
+
+
 #include <iostream>
 #include "queue.h"
 

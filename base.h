@@ -1,3 +1,7 @@
+/*
+ * the base head file
+ */
+
 #ifndef __BASE_H
 #define __BASE_H
 

@@ -1,8 +1,7 @@
 /*
+ * the declaration of the Class String
+ */
 
-
-
-*/
 
 #ifndef __STRING_H
 #define __STRING_H

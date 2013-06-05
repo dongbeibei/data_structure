@@ -1,3 +1,8 @@
+/*
+ * the declaration of the Class LinkList
+ */
+
+
 #ifndef __LINKLIST_H
 #define __LINKLIST_H
 

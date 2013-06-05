@@ -1,6 +1,7 @@
 /*
+ * the test file of the Class String
+ */
 
-*/
 
 #include <iostream>
 #include "string.h"

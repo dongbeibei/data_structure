@@ -1,3 +1,8 @@
+/*
+ * the declaration of the Class Stack
+ */
+
+
 #ifndef __STACK_H
 #define __STACK_H
 

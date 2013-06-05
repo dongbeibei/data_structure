@@ -1,8 +1,6 @@
 /*
-
-
-
-*/
+ * the implementation of the Class String
+ */
 
 
 #include <iostream>

@@ -1,3 +1,8 @@
+/*
+ * The test file of the Class Queue
+ */
+
+
 #include <iostream>
 #include "queue.h"
 
