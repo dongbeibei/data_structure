@@ -9,6 +9,7 @@
 
 
 #include <iostream>
+#include <queue>
 #include "bstree.h"
 using namespace std;
 
@@ -179,7 +180,25 @@ void Bstree::preorderVisit()
 	preVisit(m_tree.root);
 }
 
- 
+void Bstree::levelVisit()
+{
+	struct Node *x = m_tree.root;
+	queue<struct Node *> myqueue;
+
+	myqueue.push(x);
+	while(!myqueue.empty())
+	{
+		cout<<x->m_nkey<<"  ";
+		if(x->leftchild)
+			myqueue.push(x->leftchild);
+		if(x->rightchild)
+			myqueue.push(x->rightchild);
+		myqueue.pop();
+		x = myqueue.front();
+	}
+}
+
+
 bool Bstree::init()
 {
 	m_tree.root = NULL;

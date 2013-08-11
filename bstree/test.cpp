@@ -32,6 +32,10 @@ int main(void)
 	test->preorderVisit();
 	cout<<endl;
 
+	cout<<"data:\t";
+	test->levelVisit();
+	cout<<endl;
+
 	delete test;
 
 	return 0;

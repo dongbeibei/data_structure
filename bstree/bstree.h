@@ -40,6 +40,7 @@ public:
 	struct Node *successor(struct Node *x);
 
 	void preorderVisit();
+	void levelVisit();
 
 private:
 	bool init();

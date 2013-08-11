@@ -36,6 +36,7 @@ public:
 	bool ListInsert(int i, ElemType e);
 	bool ListDelete(int i, ElemType &e);
 	bool ListTraverse();
+	
 
 private:
 	bool InitList();
