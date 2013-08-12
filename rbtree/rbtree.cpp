@@ -7,17 +7,15 @@
  * function:	construction/destory/insert/delete/search/
  */
 
-
+#include <isotream>
 #include "rbtree.h"
+
+using namespace std;
 
 RBTree::RBTree()
 {
-	m_nullNode = new RBNode();
-	m_root = m_nullNode;
-	m_nullNode->right = m_root;
-	m_nullNode->left = m_root;
-	m_nullNode->parent = m_root;
-	m_nullNode->RB_COLOR = BLACK;
+	if(!init())
+		cout<<"RBTree init fail."<<endl;
 }
 
 RBTree::~RBTree()
@@ -34,7 +32,6 @@ bool RBTree::Empty()
 		return false;
 }
 
-//find node who's key equals to key, else find the insert point
 RBNode *RBTree::find(int key)
 {
 	RBNode *index = m_root;
@@ -81,6 +78,9 @@ bool RBTree::Insert(int key)
 		m_nullNode->left = m_root;
 		m_nullNode->right = m_root;
 		m_nullNode->parent = m_root;
+		m_nullNode->RB_COLOR = BLACK;
+
+		return true;
 	}
 	else
 	{
@@ -92,6 +92,8 @@ bool RBTree::Insert(int key)
 	}
 
 	InsertFixup(insert_node);
+
+	return true;
 }
 
 void RBTree::InsertFixup(RBNode *node)
@@ -158,7 +160,7 @@ bool RBTree::RotateLeft(RBNode *node)
 	if(node==m_nullNode || node->right==m_nullNode)
 		return false;
 
-	RBNode *lower_right = node_right;
+	RBNode *lower_right = node->right;
 	lower_right->parent = node->parent;
 	node->right = lower_right->left;
 	if(lower_right->left != m_nullNode)
@@ -179,6 +181,8 @@ bool RBTree::RotateLeft(RBNode *node)
 	}
 	node->parent = lower_right;
 	lower_right->left = node;
+
+	return true;
 }
 
 bool RBTree::RotateRight(RBNode *node)
@@ -208,6 +212,8 @@ bool RBTree::RotateRight(RBNode *node)
 
 	node->parent = lower_left;
 	lower_left->right = node;
+
+	return true;
 }
 
 bool RBTree::Delete(int key)
@@ -400,6 +406,21 @@ void RBTree::InOrderTraverse(RBNode *node)
 	}
 }
 
+
+bool RBTree::init()
+{
+	m_nullNode = new RBNode();
+	if(!m_nullNode)
+		return false;
+	
+	m_root = m_nullNode;
+	m_nullNode->right = m_root;
+	m_nullNode->left = m_root;
+	m_nullNode->parent = m_root;
+	m_nullNode->RB_COLOR = BLACK;
+
+	return true;
+}
 
 void RBTree::clear(RBNode *node)
 {

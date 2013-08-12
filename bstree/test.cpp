@@ -1,5 +1,9 @@
 /*
  * a test for bstree class
+ *
+ * author:	dongbeibei
+ * time:		2013/6/25
+ * modify:	2013/8/12
  */
 
 
@@ -9,7 +13,7 @@ using namespace std;
 
 int main(void)
 {
-	Bstree *test = new Bstree;
+	BSTree *test = new BSTree;
 
 
 	test->insertNode(4);

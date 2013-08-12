@@ -3,6 +3,7 @@
  *
  * author:	dongbeibei
  * time:		2013/6/25
+ * modify:	2013/8/12
  *
  * function:	construction/destory/insert/delete/search/
  */
@@ -13,19 +14,19 @@
 #include "bstree.h"
 using namespace std;
 
-Bstree::Bstree()
+BSTree::BSTree()
 {
 	if(!init())
 		cout<<"bstree init fail."<<endl;
 }
 
-Bstree::~Bstree()
+BSTree::~BSTree()
 {
 	if(!destory(m_tree.root))
 		cout<<"bstree destory fail."<<endl;
 }
 
-struct Node *Bstree::searchNode(int key)
+struct Node *BSTree::searchNode(int key)
 {
 	struct Node *x ;
 
@@ -41,7 +42,7 @@ struct Node *Bstree::searchNode(int key)
 	return x;
 }
 
-struct Node *Bstree::minimum(struct Node *x)
+struct Node *BSTree::minimum(struct Node *x)
 {
 	while(x->leftchild)
 		x = x->leftchild;
@@ -49,7 +50,7 @@ struct Node *Bstree::minimum(struct Node *x)
 	return x;
 }
 
-struct Node *Bstree::maximum(struct Node *x)
+struct Node *BSTree::maximum(struct Node *x)
 {
 	while(x->rightchild)
 		x = x->rightchild;
@@ -58,11 +59,12 @@ struct Node *Bstree::maximum(struct Node *x)
 }
 
 
-bool Bstree::insertNode(int key)
+bool BSTree::insertNode(int key)
 {
 	if(!(m_tree.root))
 	{
-		m_tree.root = (struct Node *)malloc(sizeof(struct Node));
+		m_tree.root = new Node;
+		//m_tree.root = (struct Node *)malloc(sizeof(struct Node));
 		if(!(m_tree.root))
 			return false;
 
@@ -73,7 +75,8 @@ bool Bstree::insertNode(int key)
 
 	struct Node *x, *y, *new_node;
 
-	new_node = (struct Node *)malloc(sizeof(struct Node));
+	new_node = new Node;
+	//new_node = (struct Node *)malloc(sizeof(struct Node));
 	if(!new_node)
 	{
 		cout<<"new_node malloc fail."<<endl;
@@ -103,7 +106,7 @@ bool Bstree::insertNode(int key)
 	return true;
 }
 
-bool Bstree::deleteNode(int key)
+bool BSTree::deleteNode(int key)
 {
 	struct Node *del_Node, *x, *y;
 
@@ -138,10 +141,12 @@ bool Bstree::deleteNode(int key)
 		del_Node->m_nkey = y->m_nkey;
 	}
 
+	delete y;
+
 	return true;
 }
 
-struct Node *Bstree::predecessor(struct Node *x)
+struct Node *BSTree::predecessor(struct Node *x)
 {
 	struct Node *temp;
 
@@ -158,7 +163,7 @@ struct Node *Bstree::predecessor(struct Node *x)
 	return temp;
 }
 
-struct Node *Bstree::successor(struct Node *x)
+struct Node *BSTree::successor(struct Node *x)
 {
 	struct Node *temp;
 
@@ -175,12 +180,12 @@ struct Node *Bstree::successor(struct Node *x)
 	return temp;
 }
 
-void Bstree::preorderVisit()
+void BSTree::preorderVisit()
 {
 	preVisit(m_tree.root);
 }
 
-void Bstree::levelVisit()
+void BSTree::levelVisit()
 {
 	struct Node *x = m_tree.root;
 	queue<struct Node *> myqueue;
@@ -199,25 +204,26 @@ void Bstree::levelVisit()
 }
 
 
-bool Bstree::init()
+bool BSTree::init()
 {
 	m_tree.root = NULL;
 	return true;
 }
 
-bool Bstree::destory(struct Node *x)
+bool BSTree::destory(struct Node *x)
 {
 	if(x->leftchild)
 		destory(x->leftchild);
 	if(x->rightchild)
 		destory(x->rightchild);
 
-	free(x);
+	//free(x);
+	delete x;
 
 	return true;
 }
 
-void Bstree::preVisit(struct Node *x)
+void BSTree::preVisit(struct Node *x)
 {
 	if(x->leftchild)
 		preVisit(x->leftchild);
