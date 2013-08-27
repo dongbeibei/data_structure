@@ -22,7 +22,8 @@ bool mergeSort(ElemType *array, int length)
 
 	ElemType *array_temp = new ElemType[length];
 	helper(array, array_temp, 0, length-1);
-	
+
+	delete []array_temp;	
 	return true;
 }
 
