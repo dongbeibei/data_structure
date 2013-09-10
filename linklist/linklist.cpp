@@ -1,198 +1,259 @@
 /*
- * This is the implementation for the Class LinkList.
+ * function: the declartion of the linklist template, realize the linklist by link
+ *
+ * author: feng
+ * time:   2013/9/10
  */
 
 
-#include "linklist.h"
 #include <iostream>
+#include <cstdlib>
 
-using std::cout;
-using std::endl;
+using namespace std;
 
-LinkList::LinkList()
+template <typename T>
+class LinkList
 {
-	InitList();
-}
-LinkList::~LinkList()
-{
-	DestoryList();
-}
+private:
+	struct ListElement
+	{
+		T	m_nValue;
+		struct ListElement	*m_pNext;
+	};
+	struct ListElement *m_head;
 
-bool LinkList::ClearList()
-{
-	L.length = 0;
+	// construct a new node
+	void createNode(struct ListElement **pCur, T value)
+	{
+		try
+		{
+			*pCur = new ListElement;
+		}
+		catch(bad_alloc& bad)
+		{
+			cerr<<"Error: "<<bad.what()<<endl;
+			exit(EXIT_FAILURE);
+		}
 
-	return OK;
-}
+		(*pCur)->m_nValue = value;
+		(*pCur)->m_pNext = NULL;
+	}
 
-bool LinkList::ListEmpty()
-{
-	if(L.length == 0)
-		return true;
-	else
+public:
+	// constructor and deconstructor
+	LinkList()
+	{
+		createNode(&m_head, T(0));
+	}
+
+	~LinkList()
+	{
+		cout<<"deconstructor."<<endl;
+		struct ListElement *pTemp = m_head, *pNext;
+
+		while(pTemp)
+		{
+			pNext = pTemp->m_pNext;
+			delete pTemp;
+			pTemp = pNext;
+		}
+
+		pTemp = NULL;
+		pNext = NULL;
+	}
+
+
+	// copy constructor and copy assignment constructor
+	LinkList(const LinkList<T>& listSrc)
+	{
+		cout<<"copy constructor:"<<endl;
+		struct ListElement *pDst;
+
+		createNode(&m_head, T(0));
+
+		pDst = listSrc.m_head->m_pNext;
+		while(pDst)
+		{
+			insertElement(pDst->m_nValue);
+			pDst = pDst->m_pNext;
+		}
+	}
+
+	LinkList<T>& operator=(const LinkList<T>& listSrc)
+	{
+		cout<<"copy assignment constructor:"<<endl;
+		if(this == &listSrc)
+			return *this;
+
+		struct ListElement *pDst;
+
+		createNode(&m_head, T(0));
+
+		pDst = listSrc.m_head->m_pNext;
+		while(pDst)
+		{
+			insertElement(pDst->m_nValue);
+			pDst = pDst->m_pNext;
+		}
+
+		return *this;
+	}
+
+
+	// insert and delete
+	bool insertElement(T value)
+	{
+		struct ListElement *pTemp = m_head;
+		while(pTemp->m_pNext)
+			pTemp = pTemp->m_pNext;
+
+		struct ListElement *pCur;
+
+		createNode(&pCur, value);
+		pTemp->m_pNext = pCur;
+	}
+
+	bool deleteElement(T value)
+	{
+		struct ListElement *pTemp = m_head->m_pNext, *pPrev = m_head;
+
+		while(pTemp)
+		{
+			if(pTemp->m_nValue == value)
+			{
+				pPrev->m_pNext = pTemp->m_pNext;
+				delete pTemp;
+				pTemp = NULL;
+				pPrev = NULL;
+
+				return true;
+			}
+			else
+			{
+				pPrev = pTemp;
+				pTemp = pTemp->m_pNext;
+			}
+		}
+
+		pTemp = NULL;
+		pPrev = NULL;
+
 		return false;
-}
-
-int LinkList::ListLength()
-{
-	return L.length;
-}
-
-bool LinkList::GetElem(int i, ElemType &e)
-{
-	if(i<1 || i> L.length)
-		return ERROR;
-	
-	e = *(L.elem + i - 1);
-
-	return OK;
-}
-
-int LinkList::LocateElem(ElemType e)
-{
-	ElemType *p;
-	int	i = 1;
-
-	while(i<L.length && !compare(*p++, e))
-		i++;
-	if(i<L.length)
-		return i;
-	else
-		return 0;
-}
-
-bool LinkList::PeriorElem(ElemType cur_e, ElemType &pre_e)
-{
-	ElemType *p = L.elem + 1;
-	int i = 1;
-	
-	while(i<L.length && *p!=cur_e)
-	{
-		p++;
-		i++;
-	}
-	
-	if(i > L.length)
-		return ERROR;
-	else
-	{
-		pre_e = *--p;
-		return OK;
-	}
-}
-
-bool LinkList::NextElem(ElemType cur_e, ElemType &next_e)
-{
-	ElemType *p = L.elem;
-	int i = 1;
-
-	while(i<=L.length-1 && *p!=cur_e)
-	{
-		p++;
-		i++;
 	}
 
-	if(i > L.length - 1)
-		return ERROR;
-	else
+	bool insertElement(struct ListElement *pCur, T value)
 	{
-		next_e = *++p;
-		return OK;
+		if(pCur == NULL)
+		{
+			insertElement(value);
+			return true;
+		}
+
+		if(searchElement(pCur))
+		{
+			struct ListElement *pNext = pCur->m_pNext;
+			struct ListElement *pTemp;
+
+			createNode(&pTemp, pCur->m_nValue);
+
+			pTemp->m_pNext = pNext;
+			pCur->m_nValue = value;
+			pCur->m_pNext = pTemp;
+
+			return true;
+		}
+		else
+		{
+			cout<<"The node is not in the linklist."<<endl;
+
+			return false;
+		}
 	}
-}
 
-bool LinkList::ListInsert(int i, ElemType e)
-{
-	if(i<1 || i>L.length+1)
-		return ERROR;
-
-	ElemType *newbase, *p, *q;
-
-	if(L.length >= L.listsize)
+	bool deleteElement(struct ListElement *pCur)
 	{
-		newbase = (ElemType *)realloc(L.elem, (L.listsize+LISTINCREMENT)*sizeof(ElemType));
-		if(!newbase)
-			return ERROR;
+		if(searchElement(pCur))
+		{
+			if(pCur->m_pNext != NULL)
+			{
+				struct ListElement *pNext = pCur->m_pNext;
+				
+				pCur->m_nValue = pNext->m_nValue;
+				pCur->m_pNext = pNext->m_pNExt;
 
-		L.elem = newbase;
-		L.listsize += LISTINCREMENT;
+				delete pNext;
+			}
+			else
+			{
+				struct ListElement *pPrev = m_head;
+
+				while(pPrev->m_pNext->m_pNext)
+					pPrev = pPrev->m_pNext;
+
+				pPrev->m_pNext = NULL;
+				delete pCur;
+			}
+
+			return true;
+		}
+		else
+		{
+			cout<<"The node is not in the linklist."<<endl;
+
+			return false;
+		}
 	}
-	
-	q = L.elem + i - 1;
-	for(p=L.elem+L.length ; p>=q ; p--)
-		*(p+1) = *p;
-
-	*q = e;
-	++L.length;
-
-	return OK;
-}
-
-bool LinkList::ListDelete(int i, ElemType &e)
-{
-	if(i<1 || i>L.length)
-		return ERROR;
-
-	ElemType *p, *q;
-
-	p = L.elem + i - 1;
-	q = L.elem + L.length - 1;
-	e = *p;
-	for(++p ; p<=q ; ++p)
-		*(p-1) = *p;
-
-	L.length--;
-
-	return OK;
-}
-
-bool LinkList::ListTraverse()
-{
-	ElemType *p;
-	int i;
-
-	p = L.elem;
-	for(i=1 ; i<=L.length; i++)
-		visit(p++);
-	std::cout<<std::endl;
-
-	return OK;
-}
 
 
+	// search
+	struct ListElement* searchElement(T value)
+	{
+		struct ListElement *pTemp = m_head->m_pNext;
 
-bool LinkList::InitList()
-{
-	L.elem = (ElemType *)malloc(LIST_INIT_SIZE*sizeof(ElemType));
+		while(pTemp)
+		{
+			if(pTemp->m_nValue == value)
+				return pTemp;
+			else
+				pTemp = pTemp->m_pNext;
+		}
 
-	if(!L.elem)
-		return ERROR;
+		return NULL;
+	}
 
-	L.length = 0;
-	L.listsize = LIST_INIT_SIZE;
+	bool searchElement(struct ListElement *pCur)
+	{
+		struct ListElement *pTemp = m_head->m_pNext;
 
-	return OK;
-}
+		while(pTemp)
+		{
+			if(pCur == pTemp)
+				return true;
+			else
+				pTemp = pTemp->m_pNext;
+		}
 
-bool LinkList::DestoryList()
-{
-	free(L.elem);
-	L.elem = NULL;
-	L.length = 0;
-	L.listsize = 0;
+		return false;
+	}
 
-	return OK;
-}
 
-bool LinkList::compare(ElemType i, ElemType j)
-{
-	if(i > j)
-		return OK;
-	else
-		return ERROR;
-}
+	// traverse
+	void traverse()
+	{
+		cout<<"Element in the linklist:"<<endl;
+		struct ListElement *pTemp = m_head->m_pNext;
 
-void LinkList::visit(ElemType *p)
-{
-	std::cout<<*p<<"  ";
-}
+		if(pTemp == NULL)
+		{
+			cout<<"\tEmpty LinkList."<<endl;
+			return;
+		}
+
+		while(pTemp)
+		{
+			cout<<pTemp->m_nValue<<"  ";
+			pTemp = pTemp->m_pNext;
+		}
+		cout<<endl;
+	}
+};
