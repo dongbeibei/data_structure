@@ -7,7 +7,7 @@
 
 
 #include <iostream>
-#include "linklist.cpp"
+#include "linklist.h"
 
 using namespace std;
 
